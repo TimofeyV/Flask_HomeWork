@@ -69,6 +69,36 @@ def contacts():
     }
     return render_template('contacts.html',**context )
 
+@app.route('/login/')
+def login(): 
+    context = {
+        'title': "Вход",
+        'menu': menu
+    }
+    return render_template('login.html', **context)
+
+@app.post('/login/')
+@csrf.exempt
+def login_post():
+    name = request.form.get('name')
+    phone = request.form.get('phone')
+    context = {
+        'title': "Вход",
+        'menu': menu,
+        'name': name
+    }
+    response = make_response(render_template('hello.html', **context))
+    response.set_cookie('username', name)
+    response.set_cookie('phone', phone) 
+    return response
+
+@app.route('/exit/')
+def exit():
+    responce = make_response(redirect(url_for('index')))
+    responce.delete_cookie('username')
+    responce.delete_cookie('phone')
+    return responce
+
 
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
